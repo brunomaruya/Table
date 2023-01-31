@@ -19,11 +19,22 @@ export default function Home() {
           ...doc.data(),
           id: doc.id,
         }));
+
         setAnimes(newData);
       });
     };
 
     fetchAnimes();
+  }, []);
+
+  useEffect(() => {
+    const fetchAnimes2 = async () => {
+      const querySnapshot = await getDocs(colRef);
+      querySnapshot.docs.map((doc) => {
+        console.log(doc.data());
+      });
+    };
+    fetchAnimes2();
   }, []);
 
   return (
@@ -32,7 +43,11 @@ export default function Home() {
         <h1>Home</h1>
         <div>
           {animes
-            ? animes.map((anime) => <div key={anime.id}>{anime.AnimeName}</div>)
+            ? animes.map((anime) => (
+                <div key={anime.id}>
+                  {anime.AnimeName}, {anime.Author}
+                </div>
+              ))
             : ''}
         </div>
       </Layout>
