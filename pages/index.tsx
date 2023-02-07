@@ -52,7 +52,7 @@ export default function Home() {
   return (
     <>
       <Layout>
-        <h1>Home</h1>
+        <h1>Animes Table</h1>
         <div className="container">
           <table {...getTableProps()}>
             <thead>

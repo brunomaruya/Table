@@ -50,3 +50,8 @@ td:first-child,
 th:first-child {
   width: 700px;
 }
+h1 {
+  text-align: center;
+  margin: 30px auto;
+  font-family: sans-serif;
+}
