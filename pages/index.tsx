@@ -53,7 +53,7 @@ export default function Home() {
     <>
       <Layout>
         <h1>Home</h1>
-        <div>
+        <div className="container">
           <table {...getTableProps()}>
             <thead>
               {headerGroups.map((headerGroup, index) => (
@@ -76,6 +76,7 @@ export default function Home() {
                   // eslint-disable-next-line react/jsx-key
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell, index) => (
+                      // eslint-disable-next-line react/jsx-key
                       <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     ))}
                   </tr>
