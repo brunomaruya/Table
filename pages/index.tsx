@@ -1,6 +1,12 @@
 import { Layout } from '@/components/Layout';
-import { colRef } from '@/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { colRef, db } from '@/firebase';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+} from 'firebase/firestore';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Column, TableOptions, useTable } from 'react-table';
 
@@ -12,7 +18,7 @@ interface IAnimes {
 
 export default function Home() {
   const [animes, setAnimes] = useState<IAnimes[]>();
-  console.log(animes);
+  // console.log(animes);
 
   const columns: Column<IAnimes>[] = useMemo(
     () => [
@@ -35,6 +41,32 @@ export default function Home() {
   const { getTableProps, headerGroups, getTableBodyProps, rows, prepareRow } =
     useTable({ columns, data });
 
+  const addData = async () => {
+    try {
+      const docRef = await addDoc(colRef, {
+        AnimeName: 'Shingeki no Kyojin',
+        Author: 'Hajime Isayama',
+      });
+      console.log('document written: ', docRef.id);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const deleteData = (e) => {
+    // console.log(e.currentTarget.parentElement.firstElementChild.innerText);
+
+    const docRef = doc(
+      db,
+      'Animes',
+      e.currentTarget.parentElement.firstElementChild.innerText
+    );
+    deleteDoc(docRef);
+
+    // window.location.reload();
+
+    // console.log('document deleted: ', docRef);
+  };
+
   useEffect(() => {
     const fetchAnimes = async () => {
       await getDocs(colRef).then((snapshot) => {
@@ -47,7 +79,7 @@ export default function Home() {
     };
 
     fetchAnimes();
-  }, []);
+  }, [animes]);
 
   return (
     <>
@@ -56,29 +88,31 @@ export default function Home() {
         <div className="container">
           <table {...getTableProps()}>
             <thead>
-              {headerGroups.map((headerGroup, index) => (
+              {headerGroups.map((headerGroup) => (
                 // eslint-disable-next-line react/jsx-key
                 <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column, index) => (
+                  {headerGroup.headers.map((column) => (
                     // eslint-disable-next-line react/jsx-key
                     <th {...column.getHeaderProps()}>
                       {column.render('Header')}
                     </th>
                   ))}
+                  <th>Delete</th>
                 </tr>
               ))}
             </thead>
 
             <tbody {...getTableBodyProps()}>
-              {rows.map((row, index) => {
+              {rows.map((row) => {
                 prepareRow(row);
                 return (
                   // eslint-disable-next-line react/jsx-key
                   <tr {...row.getRowProps()}>
-                    {row.cells.map((cell, index) => (
+                    {row.cells.map((cell) => (
                       // eslint-disable-next-line react/jsx-key
                       <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                     ))}
+                    <td onClick={deleteData}>X</td>
                   </tr>
                 );
               })}
