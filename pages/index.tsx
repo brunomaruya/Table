@@ -85,6 +85,18 @@ export default function Home() {
     <>
       <Layout>
         <h1>Animes Table</h1>
+
+        <form action="">
+          <div>
+            <label htmlFor="animeName">Anime Name: </label>
+            <input type="text" id="animeName" placeholder="Enter anime name" />
+          </div>
+          <div>
+            <label htmlFor="author">Anime Author: </label>
+            <input type="text" id="author" placeholder="Enter anime author" />
+          </div>
+        </form>
+
         <div className="container">
           <table {...getTableProps()}>
             <thead>
