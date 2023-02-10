@@ -8,6 +8,7 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Column, TableOptions, useTable } from 'react-table';
 
 interface IAnimes {
@@ -41,30 +42,37 @@ export default function Home() {
   const { getTableProps, headerGroups, getTableBodyProps, rows, prepareRow } =
     useTable({ columns, data });
 
-  const addData = async () => {
+  const { register, handleSubmit, reset } = useForm({
+    defaultValues: {
+      animeName: '',
+      animeAuthor: '',
+    },
+  });
+
+  const handleCreateNewData = (data) => {
+    console.log(data);
+    addData(data.animeName, data.animeAuthor);
+    reset();
+  };
+
+  const addData = async (animeName, animeAuthor) => {
     try {
       const docRef = await addDoc(colRef, {
-        AnimeName: 'Shingeki no Kyojin',
-        Author: 'Hajime Isayama',
+        AnimeName: animeName,
+        Author: animeAuthor,
       });
       console.log('document written: ', docRef.id);
     } catch (err) {
       console.log(err);
     }
   };
-  const deleteData = (e) => {
-    // console.log(e.currentTarget.parentElement.firstElementChild.innerText);
-
+  const deleteData = (e: any) => {
     const docRef = doc(
       db,
       'Animes',
       e.currentTarget.parentElement.firstElementChild.innerText
     );
     deleteDoc(docRef);
-
-    // window.location.reload();
-
-    // console.log('document deleted: ', docRef);
   };
 
   useEffect(() => {
@@ -86,15 +94,26 @@ export default function Home() {
       <Layout>
         <h1>Animes Table</h1>
 
-        <form action="">
+        <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
           <div>
             <label htmlFor="animeName">Anime Name: </label>
-            <input type="text" id="animeName" placeholder="Enter anime name" />
+            <input
+              type="text"
+              id="animeName"
+              placeholder="Enter anime name"
+              {...register('animeName')}
+            />
           </div>
           <div>
             <label htmlFor="author">Anime Author: </label>
-            <input type="text" id="author" placeholder="Enter anime author" />
+            <input
+              type="text"
+              id="author"
+              placeholder="Enter anime author"
+              {...register('animeAuthor')}
+            />
           </div>
+          <input type="submit" />
         </form>
 
         <div className="container">
