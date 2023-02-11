@@ -43,13 +43,14 @@ td,
 th {
   width: 100%;
   padding: 20px;
-  text-align: center;
+  text-align: left;
   border: 1px solid rgba(255, 255, 255, 0.125);
 }
 td:last-child,
 th:last-child {
   width: 500px;
   cursor: pointer;
+  text-align: center;
 }
 td:last-child:hover {
   background: darkcyan;

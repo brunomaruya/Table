@@ -13,11 +13,12 @@ import { Column, TableOptions, useTable } from 'react-table';
 
 interface IAnimes {
   id: string;
-  Author: string;
   AnimeName: string;
+  Author: string;
 }
 
 export default function Home() {
+  const [load, setLoad] = useState(false);
   const [animes, setAnimes] = useState<IAnimes[]>();
   // console.log(animes);
 
@@ -33,9 +34,9 @@ export default function Home() {
     ? animes
     : [
         {
+          id: '',
           AnimeName: '',
           Author: '',
-          id: '',
         },
       ];
 
@@ -52,10 +53,11 @@ export default function Home() {
   const handleCreateNewData = (data) => {
     console.log(data);
     addData(data.animeName, data.animeAuthor);
+    setLoad(!load);
     reset();
   };
 
-  const addData = async (animeName, animeAuthor) => {
+  const addData = async (animeName: string, animeAuthor: string) => {
     try {
       const docRef = await addDoc(colRef, {
         AnimeName: animeName,
@@ -87,23 +89,24 @@ export default function Home() {
     };
 
     fetchAnimes();
+  }, [load]);
 
-    if (animes) {
-      animes.sort((a, b) => {
-        let fa = a.AnimeName.toLowerCase(),
-          fb = b.Author.toLowerCase();
+  if (animes) {
+    animes.sort((a, b) => {
+      let fa = a.AnimeName.toLowerCase(),
+        fb = b.AnimeName.toLowerCase();
 
-        if (fa < fb) {
-          return -1;
-        }
-        if (fa > fb) {
-          return 1;
-        }
-        return 0;
-      });
-    }
-  }, [animes]);
+      if (fa < fb) {
+        return -1;
+      }
+      if (fa > fb) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 
+  console.log(animes);
   return (
     <>
       <Layout>
