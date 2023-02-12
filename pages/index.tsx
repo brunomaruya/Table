@@ -18,7 +18,6 @@ interface IAnimes {
 }
 
 export default function Home() {
-  const [load, setLoad] = useState(false);
   const [animes, setAnimes] = useState<IAnimes[]>();
   // console.log(animes);
 
@@ -53,7 +52,7 @@ export default function Home() {
   const handleCreateNewData = (data) => {
     console.log(data);
     addData(data.animeName, data.animeAuthor);
-    setLoad(!load);
+
     reset();
   };
 
@@ -89,7 +88,9 @@ export default function Home() {
     };
 
     fetchAnimes();
-  }, [load]);
+  }, []);
+
+  console.log('oi');
 
   if (animes) {
     animes.sort((a, b) => {
@@ -106,7 +107,6 @@ export default function Home() {
     });
   }
 
-  console.log(animes);
   return (
     <>
       <Layout>
