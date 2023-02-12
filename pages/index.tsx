@@ -6,6 +6,7 @@ import {
   deleteDoc,
   doc,
   getDocs,
+  onSnapshot,
 } from 'firebase/firestore';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -63,17 +64,24 @@ export default function Home() {
         Author: animeAuthor,
       });
       console.log('document written: ', docRef.id);
+      window.location.reload();
     } catch (err) {
       console.log(err);
     }
   };
-  const deleteData = (e: any) => {
-    const docRef = doc(
-      db,
-      'Animes',
-      e.currentTarget.parentElement.firstElementChild.innerText
-    );
-    deleteDoc(docRef);
+  const deleteData = async (e: any) => {
+    try {
+      const docRef = await doc(
+        db,
+        'Animes',
+        e.currentTarget.parentElement.firstElementChild.innerText
+      );
+      deleteDoc(docRef);
+      console.log('data deleted');
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
