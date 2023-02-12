@@ -71,14 +71,16 @@ export default function Home() {
   };
   const deleteData = async (e: any) => {
     try {
-      const docRef = await doc(
+      const docRef = doc(
         db,
         'Animes',
         e.currentTarget.parentElement.firstElementChild.innerText
       );
       deleteDoc(docRef);
       console.log('data deleted');
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
     } catch (err) {
       console.log(err);
     }
