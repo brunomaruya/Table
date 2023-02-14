@@ -1,6 +1,7 @@
 <h1 align="center">
   Animes Table<br/>
- <!-- <a href="https://chriztiank.vercel.app/" target="_blank">chriztiank.vercel.app</a> -->
+ <a href="https://animes-table.vercel.app/" target="_blank">animes-table.vercel.app</a> 
+ 
 </h1>
 
 
