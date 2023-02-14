@@ -132,7 +132,9 @@ export default function Home() {
     <>
       <Layout>
         <div className="container">
-          <h1>Animes Table</h1>
+          <div className="title">
+            <h1>Animes Table</h1>
+          </div>
 
           <div className="header">
             <form action="" onSubmit={handleSubmit(handleCreateNewData)}>

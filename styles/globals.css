@@ -58,7 +58,7 @@ td:last-child:hover {
   background: darkcyan;
 }
 
-h1 {
+.title {
   padding: 2rem;
   text-align: center;
   font-family: sans-serif;
