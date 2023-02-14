@@ -80,7 +80,7 @@ export default function Home() {
       console.log('data deleted');
       setTimeout(() => {
         window.location.reload();
-      }, 1);
+      }, 500);
     } catch (err) {
       console.log(err);
     }
