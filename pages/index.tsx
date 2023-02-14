@@ -1,16 +1,9 @@
 import { Layout } from '@/components/Layout';
 import { colRef, db } from '@/firebase';
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-} from 'firebase/firestore';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { addDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Column, TableOptions, useTable } from 'react-table';
+import { Column, useTable } from 'react-table';
 
 interface IAnimes {
   id: string;
@@ -21,16 +14,6 @@ interface IAnimes {
 export default function Home() {
   const [animes, setAnimes] = useState<IAnimes[]>();
   const [searchedAnimes, setSearchedAnimes] = useState<IAnimes[]>();
-  // console.log(animes);
-
-  const columns: Column<IAnimes>[] = useMemo(
-    () => [
-      { Header: 'ID', accessor: 'id' },
-      { Header: 'Anime Name', accessor: 'AnimeName' },
-      { Header: 'Author', accessor: 'Author' },
-    ],
-    []
-  );
   const data = searchedAnimes
     ? searchedAnimes
     : animes
@@ -42,6 +25,15 @@ export default function Home() {
           Author: '',
         },
       ];
+
+  const columns: Column<IAnimes>[] = useMemo(
+    () => [
+      { Header: 'ID', accessor: 'id' },
+      { Header: 'Anime Name', accessor: 'AnimeName' },
+      { Header: 'Author', accessor: 'Author' },
+    ],
+    []
+  );
 
   const { getTableProps, headerGroups, getTableBodyProps, rows, prepareRow } =
     useTable({ columns, data });
@@ -76,6 +68,7 @@ export default function Home() {
       console.log(err);
     }
   };
+
   const deleteData = async (e: any) => {
     try {
       const docRef = doc(
@@ -90,6 +83,19 @@ export default function Home() {
       }, 1);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const searchAnime = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    if (animes) {
+      let updatedList = [...animes];
+      updatedList = updatedList.filter((anime) => {
+        return (
+          anime.AnimeName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        );
+      });
+      setSearchedAnimes(updatedList);
     }
   };
 
@@ -122,88 +128,78 @@ export default function Home() {
     });
   }
 
-  const searchAnime = (e) => {
-    const query = e.target.value;
-    if (animes) {
-      let updatedList = [...animes];
-      updatedList = updatedList.filter((anime) => {
-        return (
-          anime.AnimeName.toLowerCase().indexOf(query.toLowerCase()) !== -1
-        );
-      });
-      setSearchedAnimes(updatedList);
-    }
-  };
   return (
     <>
       <Layout>
-        <h1>Animes Table</h1>
-
-        <div className="header">
-          <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
-            <div>
-              <label htmlFor="animeName">Anime Name: </label>
-              <input
-                type="text"
-                id="animeName"
-                placeholder="Enter anime name"
-                {...register('animeName')}
-              />
-            </div>
-            <div>
-              <label htmlFor="author">Anime Author: </label>
-              <input
-                type="text"
-                id="author"
-                placeholder="Enter anime author"
-                {...register('animeAuthor')}
-              />
-            </div>
-            <input type="submit" />
-          </form>
-
-          <div className="search">
-            <input
-              type="text"
-              placeholder="Searh an anime"
-              onChange={searchAnime}
-            />
-          </div>
-        </div>
-
         <div className="container">
-          <table {...getTableProps()}>
-            <thead>
-              {headerGroups.map((headerGroup) => (
-                // eslint-disable-next-line react/jsx-key
-                <tr {...headerGroup.getHeaderGroupProps()}>
-                  {headerGroup.headers.map((column) => (
-                    // eslint-disable-next-line react/jsx-key
-                    <th {...column.getHeaderProps()}>
-                      {column.render('Header')}
-                    </th>
-                  ))}
-                  <th>Delete</th>
-                </tr>
-              ))}
-            </thead>
+          <h1>Animes Table</h1>
 
-            <tbody {...getTableBodyProps()}>
-              {rows.map((row) => {
-                prepareRow(row);
-                return (
+          <div className="header">
+            <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
+              <div>
+                <label htmlFor="animeName">Anime Name: </label>
+                <input
+                  type="text"
+                  id="animeName"
+                  placeholder="Enter anime name"
+                  {...register('animeName')}
+                />
+              </div>
+              <div>
+                <label htmlFor="author">Anime Author: </label>
+                <input
+                  type="text"
+                  id="author"
+                  placeholder="Enter anime author"
+                  {...register('animeAuthor')}
+                />
+              </div>
+              <input type="submit" />
+            </form>
+
+            <div className="search">
+              <input
+                type="text"
+                placeholder="Searh an anime"
+                onChange={searchAnime}
+              />
+            </div>
+          </div>
+
+          <div className="container">
+            <table {...getTableProps()}>
+              <thead>
+                {headerGroups.map((headerGroup) => (
                   // eslint-disable-next-line react/jsx-key
-                  <tr {...row.getRowProps()}>
-                    {row.cells.map((cell) => (
+                  <tr {...headerGroup.getHeaderGroupProps()}>
+                    {headerGroup.headers.map((column) => (
                       // eslint-disable-next-line react/jsx-key
-                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      <th {...column.getHeaderProps()}>
+                        {column.render('Header')}
+                      </th>
                     ))}
-                    <td onClick={deleteData}>X</td>
+                    <th>Delete</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                ))}
+              </thead>
+
+              <tbody {...getTableBodyProps()}>
+                {rows.map((row) => {
+                  prepareRow(row);
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <tr {...row.getRowProps()}>
+                      {row.cells.map((cell) => (
+                        // eslint-disable-next-line react/jsx-key
+                        <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                      ))}
+                      <td onClick={deleteData}>X</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </Layout>
     </>
