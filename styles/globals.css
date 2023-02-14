@@ -63,8 +63,6 @@ h1 {
   font-family: sans-serif;
 }
 form {
-  max-width: 1000px;
-  margin: 0 auto 2rem;
   display: flex;
   gap: 1rem;
   font-size: 1.2rem;
@@ -78,4 +76,10 @@ form div label {
 }
 form div input {
   width: 10rem;
+}
+.header {
+  max-width: 1000px;
+  margin: 0 auto 2rem;
+  display: flex;
+  justify-content: space-between;
 }

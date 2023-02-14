@@ -121,32 +121,46 @@ export default function Home() {
     });
   }
 
+  const searchAnime = (e) => {
+    console.log(e.target.value);
+  };
+
   return (
     <>
       <Layout>
         <h1>Animes Table</h1>
 
-        <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
-          <div>
-            <label htmlFor="animeName">Anime Name: </label>
+        <div className="header">
+          <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
+            <div>
+              <label htmlFor="animeName">Anime Name: </label>
+              <input
+                type="text"
+                id="animeName"
+                placeholder="Enter anime name"
+                {...register('animeName')}
+              />
+            </div>
+            <div>
+              <label htmlFor="author">Anime Author: </label>
+              <input
+                type="text"
+                id="author"
+                placeholder="Enter anime author"
+                {...register('animeAuthor')}
+              />
+            </div>
+            <input type="submit" />
+          </form>
+
+          <div className="search">
             <input
               type="text"
-              id="animeName"
-              placeholder="Enter anime name"
-              {...register('animeName')}
+              placeholder="Searh an anime"
+              onChange={searchAnime}
             />
           </div>
-          <div>
-            <label htmlFor="author">Anime Author: </label>
-            <input
-              type="text"
-              id="author"
-              placeholder="Enter anime author"
-              {...register('animeAuthor')}
-            />
-          </div>
-          <input type="submit" />
-        </form>
+        </div>
 
         <div className="container">
           <table {...getTableProps()}>
