@@ -20,6 +20,7 @@ interface IAnimes {
 
 export default function Home() {
   const [animes, setAnimes] = useState<IAnimes[]>();
+  const [searchedAnimes, setSearchedAnimes] = useState<IAnimes[]>();
   // console.log(animes);
 
   const columns: Column<IAnimes>[] = useMemo(
@@ -30,7 +31,9 @@ export default function Home() {
     ],
     []
   );
-  const data = animes
+  const data = searchedAnimes
+    ? searchedAnimes
+    : animes
     ? animes
     : [
         {
@@ -104,8 +107,6 @@ export default function Home() {
     fetchAnimes();
   }, []);
 
-  console.log('oi');
-
   if (animes) {
     animes.sort((a, b) => {
       let fa = a.AnimeName.toLowerCase(),
@@ -122,9 +123,17 @@ export default function Home() {
   }
 
   const searchAnime = (e) => {
-    console.log(e.target.value);
+    const query = e.target.value;
+    if (animes) {
+      let updatedList = [...animes];
+      updatedList = updatedList.filter((anime) => {
+        return (
+          anime.AnimeName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        );
+      });
+      setSearchedAnimes(updatedList);
+    }
   };
-
   return (
     <>
       <Layout>
