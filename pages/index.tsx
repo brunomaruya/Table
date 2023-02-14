@@ -20,6 +20,7 @@ interface IAnimes {
 
 export default function Home() {
   const [animes, setAnimes] = useState<IAnimes[]>();
+  const [searchedAnimes, setSearchedAnimes] = useState<IAnimes[]>();
   // console.log(animes);
 
   const columns: Column<IAnimes>[] = useMemo(
@@ -30,7 +31,9 @@ export default function Home() {
     ],
     []
   );
-  const data = animes
+  const data = searchedAnimes
+    ? searchedAnimes
+    : animes
     ? animes
     : [
         {
@@ -50,7 +53,11 @@ export default function Home() {
     },
   });
 
-  const handleCreateNewData = (data) => {
+  const handleCreateNewData = <
+    T extends { animeName: string; animeAuthor: string }
+  >(
+    data: T
+  ) => {
     console.log(data);
     addData(data.animeName, data.animeAuthor);
 
@@ -71,14 +78,16 @@ export default function Home() {
   };
   const deleteData = async (e: any) => {
     try {
-      const docRef = await doc(
+      const docRef = doc(
         db,
         'Animes',
         e.currentTarget.parentElement.firstElementChild.innerText
       );
       deleteDoc(docRef);
       console.log('data deleted');
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 1);
     } catch (err) {
       console.log(err);
     }
@@ -98,8 +107,6 @@ export default function Home() {
     fetchAnimes();
   }, []);
 
-  console.log('oi');
-
   if (animes) {
     animes.sort((a, b) => {
       let fa = a.AnimeName.toLowerCase(),
@@ -115,32 +122,54 @@ export default function Home() {
     });
   }
 
+  const searchAnime = (e) => {
+    const query = e.target.value;
+    if (animes) {
+      let updatedList = [...animes];
+      updatedList = updatedList.filter((anime) => {
+        return (
+          anime.AnimeName.toLowerCase().indexOf(query.toLowerCase()) !== -1
+        );
+      });
+      setSearchedAnimes(updatedList);
+    }
+  };
   return (
     <>
       <Layout>
         <h1>Animes Table</h1>
 
-        <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
-          <div>
-            <label htmlFor="animeName">Anime Name: </label>
+        <div className="header">
+          <form action="" onSubmit={handleSubmit(handleCreateNewData)}>
+            <div>
+              <label htmlFor="animeName">Anime Name: </label>
+              <input
+                type="text"
+                id="animeName"
+                placeholder="Enter anime name"
+                {...register('animeName')}
+              />
+            </div>
+            <div>
+              <label htmlFor="author">Anime Author: </label>
+              <input
+                type="text"
+                id="author"
+                placeholder="Enter anime author"
+                {...register('animeAuthor')}
+              />
+            </div>
+            <input type="submit" />
+          </form>
+
+          <div className="search">
             <input
               type="text"
-              id="animeName"
-              placeholder="Enter anime name"
-              {...register('animeName')}
+              placeholder="Searh an anime"
+              onChange={searchAnime}
             />
           </div>
-          <div>
-            <label htmlFor="author">Anime Author: </label>
-            <input
-              type="text"
-              id="author"
-              placeholder="Enter anime author"
-              {...register('animeAuthor')}
-            />
-          </div>
-          <input type="submit" />
-        </form>
+        </div>
 
         <div className="container">
           <table {...getTableProps()}>
