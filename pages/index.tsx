@@ -50,7 +50,11 @@ export default function Home() {
     },
   });
 
-  const handleCreateNewData = (data) => {
+  const handleCreateNewData = <
+    T extends { animeName: string; animeAuthor: string }
+  >(
+    data: T
+  ) => {
     console.log(data);
     addData(data.animeName, data.animeAuthor);
 
