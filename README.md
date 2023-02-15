@@ -11,12 +11,12 @@ A table that you are able to add animes and their authors using firestore from f
 ![](https://github.com/brunomaruya/ChirZtianKPortfolio/blob/staging/gifs/Mobile.gif)
  -->
  
-<!-- <div >
+ <div >
   <div style="display: flex; ">  
-    <img  align="top" src="https://github.com/brunomaruya/ChirZtianKPortfolio/blob/staging/gifs/Desktop.gif" />
-    <img  src="https://github.com/brunomaruya/ChirZtianKPortfolio/blob/staging/gifs/Mobile.gif" />
+    <img  align="top" src="https://github.com/brunomaruya/Table/blob/main/gifs/Desktop.gif" />
+  <!--  <img  src="https://github.com/brunomaruya/ChirZtianKPortfolio/blob/staging/gifs/Mobile.gif" /> -->
   </div>
-</div> -->
+</div>
 
 ## Built with
 - React 
