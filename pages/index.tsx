@@ -14,8 +14,30 @@ interface IAnimes {
 export default function Home() {
   const [animes, setAnimes] = useState<IAnimes[]>();
   const [searchedAnimes, setSearchedAnimes] = useState<IAnimes[]>();
+
+  const sortAnimes = () => {
+    if (animes) {
+      animes.sort((a, b) => {
+        let fa = a.AnimeName.toLowerCase(),
+          fb = b.AnimeName.toLowerCase();
+
+        if (fa < fb) {
+          return -1;
+        }
+        if (fa > fb) {
+          return 1;
+        }
+        return 0;
+      });
+      return animes;
+    }
+  };
+  const sortedAnimes = sortAnimes();
+
   const data = searchedAnimes
     ? searchedAnimes
+    : sortedAnimes
+    ? sortedAnimes
     : animes
     ? animes
     : [
@@ -112,22 +134,6 @@ export default function Home() {
 
     fetchAnimes();
   }, []);
-
-  if (animes) {
-    animes.sort((a, b) => {
-      let fa = a.AnimeName.toLowerCase(),
-        fb = b.AnimeName.toLowerCase();
-
-      if (fa < fb) {
-        return -1;
-      }
-      if (fa > fb) {
-        return 1;
-      }
-      return 0;
-    });
-    console.log(animes);
-  }
 
   return (
     <>
