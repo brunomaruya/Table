@@ -126,6 +126,7 @@ export default function Home() {
       }
       return 0;
     });
+    console.log(animes);
   }
 
   return (
